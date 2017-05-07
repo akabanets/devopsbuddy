@@ -13,8 +13,12 @@ import java.util.Locale;
 public class I18NService {
     private static final Logger logger = LoggerFactory.getLogger(I18NService.class);
 
+    private final MessageSource messageSource;
+
     @Autowired
-    private MessageSource messageSource;
+    public I18NService(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     public String getMessage(String messageId) {
         logger.info("Returning i18n message for messageId {}", messageId);

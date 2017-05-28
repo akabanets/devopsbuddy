@@ -1,7 +1,7 @@
 package com.devopsbuddy;
 
 import com.devopsbuddy.web.i18n.I18NService;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

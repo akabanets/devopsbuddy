@@ -5,7 +5,9 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 public class User implements Serializable {
@@ -163,5 +165,16 @@ public class User implements Serializable {
 
     public void setUserRoles(Set<UserRole> userRoles) {
         this.userRoles = userRoles;
+    }
+
+    @Override
+    public String toString() {
+        List<String> roleNames = userRoles.stream().map(UserRole::getRole).map(Role::getName).collect(Collectors.toList());
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", plan=" + plan.getName() +
+                ", roles=" + roleNames +
+                '}';
     }
 }

@@ -1,5 +1,7 @@
 package com.devopsbuddy.backend.persistence.domain.backend;
 
+import com.devopsbuddy.enums.RolesEnum;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -12,6 +14,11 @@ public class Role implements Serializable {
     public Role() {
     }
 
+    public Role(RolesEnum rolesEnum) {
+        id = rolesEnum.getId();
+        name = rolesEnum.getRoleName();
+    }
+
     @Id
     private int id;
 
@@ -21,7 +28,6 @@ public class Role implements Serializable {
     private Set<UserRole> userRoles = new HashSet<>();
 
     public int getId() {
-
         return id;
     }
 
@@ -58,5 +64,12 @@ public class Role implements Serializable {
     @Override
     public int hashCode() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }

@@ -26,14 +26,12 @@ public class UserServiceIntegratonTest {
 
     @Test
     public void testCreateNewUser() {
-        User transientUser = UserUtils.createBasicUser();
+        User transientUser = UserUtils.createBasicUser("basicUser");
         Set<UserRole> userRoles = new HashSet<>();
         userRoles.add(new UserRole(transientUser, new Role(RolesEnum.BASIC)));
 
         User persistedUser = userService.createUser(transientUser, PlansEnum.BASIC, userRoles);
         Assert.assertNotNull(persistedUser);
         Assert.assertNotNull(persistedUser.getId());
-
-        System.out.println(persistedUser);
     }
 }

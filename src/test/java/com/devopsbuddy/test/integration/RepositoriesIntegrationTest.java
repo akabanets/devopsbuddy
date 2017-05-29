@@ -9,6 +9,7 @@ import com.devopsbuddy.backend.persistence.repositories.PlanRepository;
 import com.devopsbuddy.backend.persistence.repositories.RoleRepository;
 import com.devopsbuddy.backend.persistence.repositories.UserRepository;
 import com.devopsbuddy.backend.persistence.repositories.UserRoleRepository;
+import com.devopsbuddy.backend.service.UserSecurityService;
 import com.devopsbuddy.enums.PlansEnum;
 import com.devopsbuddy.enums.RolesEnum;
 import com.devopsbuddy.utils.UserUtils;
@@ -18,6 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,9 +41,11 @@ public class RepositoriesIntegrationTest {
     @Autowired
     private UserRoleRepository userRoleRepository;
 
+    @Autowired
+    private UserSecurityService userSecurityService;
+
     @PersistenceContext
     private EntityManager entityManager;
-
 
     @Before
     public void init() {
@@ -84,8 +88,19 @@ public class RepositoriesIntegrationTest {
         Assert.assertEquals(3, roleRepository.count());
     }
 
+    @Test
+    public void testUserSecurityService() {
+        User persistedUser = createNewUser("andrey");
+        UserDetails retrievedUser = userSecurityService.loadUserByUsername("andrey");
+        Assert.assertNotNull(retrievedUser);
+    }
+
     private User createNewUser() {
-        User basicUser = UserUtils.createBasicUser();
+        return createNewUser("basicUser");
+    }
+
+    private User createNewUser(String username) {
+        User basicUser = UserUtils.createBasicUser(username);
         basicUser.setPlan(planRepository.findOne(PlansEnum.BASIC.getId()));
         Role basicRole = roleRepository.findOne(RolesEnum.BASIC.getId());
         basicUser.getUserRoles().add(new UserRole(basicUser, basicRole));

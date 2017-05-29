@@ -3,9 +3,9 @@ package com.devopsbuddy.utils;
 import com.devopsbuddy.backend.persistence.domain.backend.User;
 
 public class UserUtils {
-    public static User createBasicUser() {
+    public static User createBasicUser(String username) {
         User user = new User();
-        user.setUsername("basicUser");
+        user.setUsername(username);
         user.setPassword("password");
         user.setEmail("andrey@email.com");
         user.setFirstName("Andrey");

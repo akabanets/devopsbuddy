@@ -63,7 +63,7 @@ public class RepositoriesIntegrationTest {
 
     @Test
     public void testCreateBasicUser() {
-        User basicUser = createNewUser();
+        User basicUser = createNewUser("testCreateBasicUser", "testCreateBasicUser@email.com");
         verifyBasicUser(basicUser.getId());
     }
 
@@ -73,7 +73,7 @@ public class RepositoriesIntegrationTest {
         long usersInTheBeginning = userRepository.count();
         long userRoleInTheBeginning = userRoleRepository.count();
 
-        User basicUser = createNewUser();
+        User basicUser = createNewUser("testDeleteBasicUser", "testDeleteBasicUser@email.com");
         entityManager.flush();
 
         Assert.assertEquals(usersInTheBeginning+1, userRepository.count());
@@ -90,17 +90,13 @@ public class RepositoriesIntegrationTest {
 
     @Test
     public void testUserSecurityService() {
-        User persistedUser = createNewUser("andrey");
-        UserDetails retrievedUser = userSecurityService.loadUserByUsername("andrey");
+        User persistedUser = createNewUser("testUserSecurityService", "testUserSecurityService@email.com");
+        UserDetails retrievedUser = userSecurityService.loadUserByUsername("testUserSecurityService");
         Assert.assertNotNull(retrievedUser);
     }
 
-    private User createNewUser() {
-        return createNewUser("basicUser");
-    }
-
-    private User createNewUser(String username) {
-        User basicUser = UserUtils.createBasicUser(username);
+    private User createNewUser(String username, String email) {
+        User basicUser = UserUtils.createBasicUser(username, email);
         basicUser.setPlan(planRepository.findOne(PlansEnum.BASIC.getId()));
         Role basicRole = roleRepository.findOne(RolesEnum.BASIC.getId());
         basicUser.getUserRoles().add(new UserRole(basicUser, basicRole));

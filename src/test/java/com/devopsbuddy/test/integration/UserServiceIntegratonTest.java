@@ -26,7 +26,7 @@ public class UserServiceIntegratonTest {
 
     @Test
     public void testCreateNewUser() {
-        User transientUser = UserUtils.createBasicUser("basicUser");
+        User transientUser = UserUtils.createBasicUser("basicUser", "basicUser@email.com");
         Set<UserRole> userRoles = new HashSet<>();
         userRoles.add(new UserRole(transientUser, new Role(RolesEnum.BASIC)));
 

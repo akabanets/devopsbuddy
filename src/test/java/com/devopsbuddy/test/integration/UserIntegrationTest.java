@@ -1,18 +1,9 @@
 package com.devopsbuddy.test.integration;
 
 import com.devopsbuddy.DevopsbuddyApplication;
-import com.devopsbuddy.backend.persistence.domain.backend.Plan;
-import com.devopsbuddy.backend.persistence.domain.backend.Role;
 import com.devopsbuddy.backend.persistence.domain.backend.User;
 import com.devopsbuddy.backend.persistence.domain.backend.UserRole;
-import com.devopsbuddy.backend.persistence.repositories.PlanRepository;
-import com.devopsbuddy.backend.persistence.repositories.RoleRepository;
-import com.devopsbuddy.backend.persistence.repositories.UserRepository;
-import com.devopsbuddy.backend.persistence.repositories.UserRoleRepository;
 import com.devopsbuddy.backend.service.UserSecurityService;
-import com.devopsbuddy.enums.PlansEnum;
-import com.devopsbuddy.enums.RolesEnum;
-import com.devopsbuddy.utils.UserUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,42 +14,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = DevopsbuddyApplication.class)
-public class RepositoriesIntegrationTest {
-    @Autowired
-    private PlanRepository planRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UserRoleRepository userRoleRepository;
+public class UserIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private UserSecurityService userSecurityService;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Before
     public void init() {
-        Assert.assertNotNull(planRepository);
-        Assert.assertNotNull(roleRepository);
-        Assert.assertNotNull(userRepository);
-
-        createPlan(PlansEnum.BASIC);
-        createPlan(PlansEnum.PRO);
-
-        createRole(RolesEnum.BASIC);
-        createRole(RolesEnum.PRO);
-        createRole(RolesEnum.ADMIN);
+        super.init();
     }
 
     @Test
@@ -76,8 +41,8 @@ public class RepositoriesIntegrationTest {
         User basicUser = createNewUser("testDeleteBasicUser", "testDeleteBasicUser@email.com");
         entityManager.flush();
 
-        Assert.assertEquals(usersInTheBeginning+1, userRepository.count());
-        Assert.assertEquals(userRoleInTheBeginning+1, userRoleRepository.count());
+        Assert.assertEquals(usersInTheBeginning + 1, userRepository.count());
+        Assert.assertEquals(userRoleInTheBeginning + 1, userRoleRepository.count());
 
         userRepository.delete(basicUser.getId());
 
@@ -90,17 +55,9 @@ public class RepositoriesIntegrationTest {
 
     @Test
     public void testUserSecurityService() {
-        User persistedUser = createNewUser("testUserSecurityService", "testUserSecurityService@email.com");
+        createNewUser("testUserSecurityService", "testUserSecurityService@email.com");
         UserDetails retrievedUser = userSecurityService.loadUserByUsername("testUserSecurityService");
         Assert.assertNotNull(retrievedUser);
-    }
-
-    private User createNewUser(String username, String email) {
-        User basicUser = UserUtils.createBasicUser(username, email);
-        basicUser.setPlan(planRepository.findOne(PlansEnum.BASIC.getId()));
-        Role basicRole = roleRepository.findOne(RolesEnum.BASIC.getId());
-        basicUser.getUserRoles().add(new UserRole(basicUser, basicRole));
-        return userRepository.save(basicUser);
     }
 
     private void verifyBasicUser(Long id) {
@@ -113,14 +70,6 @@ public class RepositoriesIntegrationTest {
             Assert.assertNotNull(userRole1.getRole());
             Assert.assertNotNull(userRole1.getUser());
         }
-    }
-
-    private Plan createPlan(PlansEnum plansEnum) {
-        return planRepository.save(new Plan(plansEnum));
-    }
-
-    private Role createRole(RolesEnum rolesEnum) {
-        return roleRepository.save(new Role(rolesEnum));
     }
 
 }

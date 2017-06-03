@@ -10,6 +10,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaRepositories(basePackages = "com.devopsbuddy.backend.persistence.repositories")
 @EntityScan(basePackages = "com.devopsbuddy.backend.persistence.domain.backend")
 @EnableTransactionManagement
-@PropertySource("file:///${user.home}/OneDrive/Work/devopsbuddy/application-common.properties")
+@PropertySource("classpath:/application-common.properties")
 public class ApplicationConfig {
 }

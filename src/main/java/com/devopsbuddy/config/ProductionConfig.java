@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @Profile("prod")
-@PropertySource("file:///${user.home}/OneDrive/Work/devopsbuddy/application-prod.properties")
+@PropertySource("classpath:/application-prod.properties")
 public class ProductionConfig {
     @Bean
     public EmailService emailService() {

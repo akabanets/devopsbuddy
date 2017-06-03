@@ -38,7 +38,7 @@ public class UserService {
         user.setPlan(plan);
 
         for (UserRole userRole : userRoles) {
-            roleRepository.save(userRole.getRole());
+            userRole.setRole(roleRepository.save(userRole.getRole()));
         }
         user.getUserRoles().addAll(userRoles);
 

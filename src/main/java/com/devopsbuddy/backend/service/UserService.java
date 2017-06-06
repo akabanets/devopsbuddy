@@ -45,4 +45,12 @@ public class UserService {
         user = userRepository.save(user);
         return user;
     }
+
+    @Transactional
+    public void changePassword(long userId, String newPassword) {
+        User user = userRepository.findOne(userId);
+        if (user != null) {
+            user.setPassword(passwordEncoder.encode(newPassword));
+        }
+    }
 }
